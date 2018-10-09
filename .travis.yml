@@ -1,0 +1,25 @@
+language: python
+sudo: false
+
+python:
+  - "3.5"
+  - "3.6"
+  - "3.7"
+  - "nightly"
+  # PyPy versions
+  - "pypy3"
+
+matrix:
+  allow_failures:
+    - python: nightly
+
+install:
+  - python setup.py install
+  - pip install nose-exclude
+  - pip install coveralls
+
+script:
+  - nosetests --with-coverage --cover-package=tw-serverinfo
+
+after_success:
+  - coveralls

@@ -1,0 +1,33 @@
+# scrutinizer-ci.com configuration
+# language: python
+imports:
+- python
+
+build:
+  environment:
+    python: 3.6.3
+  tests:
+    before:
+    - 'python setup.py install'
+    - 'pip install nose-exclude'
+    override:
+    - command: 'nosetests'
+  nodes:
+
+    analysis:
+      tests:
+        override:
+        - py-scrutinizer-run
+
+    coverage:
+      tests:
+        before:
+        - 'python setup.py install'
+        - 'pip install nose-exclude'
+        - 'pip install coveralls'
+        override:
+        - command: 'nosetests --with-coverage --cover-package=tw-serverinfo'
+          coverage:
+            file: '.coverage'
+            config_file: '.coveragerc'
+            format: 'py-cc'
