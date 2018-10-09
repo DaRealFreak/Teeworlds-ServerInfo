@@ -7,7 +7,7 @@ from setuptools import setup, find_packages
 current_directory = os.path.abspath(os.path.dirname(__file__))
 
 about = {}
-with open(os.path.join(current_directory, 'tw-serverinfo', '__version__.py'), 'r') as f:
+with open(os.path.join(current_directory, 'tw_serverinfo', '__version__.py'), 'r') as f:
     exec(f.read(), about)
 
 setup(name=about['__title__'],

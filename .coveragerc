@@ -1,5 +1,5 @@
 [run]
-source = tw-serverinfo
+source = tw_serverinfo
 
 [report]
 exclude_lines =

@@ -26,7 +26,7 @@ build:
         - 'pip install nose-exclude'
         - 'pip install coveralls'
         override:
-        - command: 'nosetests --with-coverage --cover-package=tw-serverinfo'
+        - command: 'nosetests --with-coverage --cover-package=tw_serverinfo'
           coverage:
             file: '.coverage'
             config_file: '.coveragerc'

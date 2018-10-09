@@ -18,7 +18,7 @@ install:
   - pip install coveralls
 
 script:
-  - nosetests --with-coverage --cover-package=tw-serverinfo
+  - nosetests --with-coverage --cover-package=tw_serverinfo
 
 after_success:
   - coveralls
