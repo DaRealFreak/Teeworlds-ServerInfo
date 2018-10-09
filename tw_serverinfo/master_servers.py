@@ -1,7 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import socket
-from time import sleep
+from functools import lru_cache
+from time import sleep, time
 
 from tw_serverinfo import Network
 
@@ -26,6 +27,8 @@ class MasterServers(object):
             'port': 8300
         }
     ]
+    _master_servers = []
+    _game_servers = []
 
     @property
     def master_servers(self):
@@ -43,10 +46,25 @@ class MasterServers(object):
 
     @property
     def game_servers(self):
+        """Returns the game servers and cache the result
+
+        :return:
+        """
+        cache_info = self.update_game_servers.cache_info()
+        if cache_info.currsize > 0:
+            # clear the cache if the last index was more than 10 minutes ago
+            if time() >= self.update_game_servers()['timestamp'] + 60 * 10:
+                self.update_game_servers.cache_clear()
+        return self.update_game_servers()
+
+    @lru_cache(maxsize=None)
+    def update_game_servers(self):
         """Check the master servers for the game server count and retrieve the server list
 
         :return:
         """
+        self._game_servers = []
+
         # create an udp protocol socket
         sock = socket.socket(family=Network.PROTOCOL_FAMILY, type=socket.SOCK_DGRAM)
         # set the socket to non blocking to allow parallel requests
@@ -72,10 +90,13 @@ class MasterServers(object):
             else:
                 # if we got a response reset the duration in case we receive multiple packets
                 duration_without_response = 0
-        return
 
-    @staticmethod
-    def process_packet(data: bytes, server: dict):
+        return {
+            'servers': self._game_servers,
+            'timestamp': time()
+        }
+
+    def process_packet(self, data: bytes, server: dict):
         """Process packet function for
          - SERVERBROWSE_COUNT
          - SERVERBROWSE_LIST
@@ -86,6 +107,6 @@ class MasterServers(object):
         :return:
         """
         server['response'] = True
-        print(data)
-        print(server)
-        exit(-1)
+        self._master_servers.append(server)
+        # ToDo: parse the master server response
+        self._game_servers.append(data)
