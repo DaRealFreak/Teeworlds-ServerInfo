@@ -1,6 +1,5 @@
 import secrets
 import socket
-import typing
 
 
 class Network(object):
@@ -46,9 +45,10 @@ class Network(object):
             packet += server['token']
 
         sock.sendto(packet, (server['ip'], server['port']))
+        return server
 
     @staticmethod
-    def receive_packet(sock: socket.socket, servers: typing.Generator, callback: callable):
+    def receive_packet(sock: socket.socket, servers: dict, callback: callable):
         """Check if we received a packet if yes check for the servers with the ip and port
         and pass the server together with the data to the processing function given as a callback
 
@@ -62,7 +62,7 @@ class Network(object):
         except BlockingIOError:
             return False
 
-        for server in servers:
+        for key, server in servers.items():
             if server['ip'] == addr[0] and server['port'] == addr[1]:
                 callback(data, server)
 
