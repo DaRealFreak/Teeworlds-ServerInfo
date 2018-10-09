@@ -2,11 +2,8 @@ language: python
 sudo: false
 
 python:
-  - "3.5"
   - "3.6"
   - "nightly"
-  # PyPy versions
-  - "pypy3"
 
 matrix:
   allow_failures:
