@@ -55,6 +55,8 @@ class MasterServers(object):
             # clear the cache if the last index was more than 10 minutes ago
             if time() >= self.update_game_servers()['timestamp'] + 60 * 10:
                 self.update_game_servers.cache_clear()
+                self._master_servers = []
+                self._game_servers = []
         return self.update_game_servers()
 
     @lru_cache(maxsize=None)
@@ -63,8 +65,6 @@ class MasterServers(object):
 
         :return:
         """
-        self._game_servers = []
-
         # create an udp protocol socket
         sock = socket.socket(family=Network.PROTOCOL_FAMILY, type=socket.SOCK_DGRAM)
         # set the socket to non blocking to allow parallel requests
