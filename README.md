@@ -7,9 +7,7 @@ This script runs with [Python 3](https://www.python.org).
 Download this repository and run the setup.py to install all necessary dependencies
 
 ### Dependencies
-Required:
-* [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup) - html parser
-
+None
 
 ### Usage
 ToDo
