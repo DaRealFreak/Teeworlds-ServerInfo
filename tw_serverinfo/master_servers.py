@@ -114,7 +114,6 @@ class MasterServers(object):
         :return:
         """
         master_server_key = '{ip:s}:{port:d}'.format(ip=server['ip'], port=server['port'])
-
         self._master_servers[master_server_key]['response'] = True
 
         if data[6:6 + 8] == Network.PACKETS['SERVERBROWSE_COUNT']:
@@ -131,7 +130,8 @@ class MasterServers(object):
                 game_server_key = '{ip:s}:{port:d}'.format(ip=ip, port=port)
                 game_server = {
                     'ip': ip,
-                    'port': port
+                    'port': port,
+                    'type': 'game'
                 }
                 self._master_servers[master_server_key]['servers'][game_server_key] = game_server
                 self._game_servers[game_server_key] = game_server
