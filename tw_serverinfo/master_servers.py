@@ -76,10 +76,12 @@ class MasterServers(object):
         sock.setblocking(False)
 
         for key, master_server in self.master_servers.items():
-            self._master_servers[key] = Network.send_packet(sock=sock, data=Network.PACKETS['SERVERBROWSE_GETCOUNT'],
-                                                            server=master_server)
-            self._master_servers[key] = Network.send_packet(sock=sock, data=Network.PACKETS['SERVERBROWSE_GETLIST'],
-                                                            server=master_server)
+            master_server = Network.send_packet(sock=sock, data=Network.PACKETS['SERVERBROWSE_GETCOUNT'],
+                                                server=master_server)
+            master_server = Network.send_packet(sock=sock, data=Network.PACKETS['SERVERBROWSE_GETLIST'],
+                                                server=master_server)
+            # update master server entry which probably got modified
+            self._master_servers[key] = master_server
 
         duration_without_response = Network.CONNECTION_SLEEP_DURATION
         sleep(Network.CONNECTION_SLEEP_DURATION / 1000.0)
