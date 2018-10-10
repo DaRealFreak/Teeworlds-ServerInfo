@@ -118,7 +118,7 @@ class GameServers(object):
             max_clients = int(slots.popleft().decode('utf-8'))
 
             players = self._game_servers[game_server_key]['players']
-            if slots[0] == '':
+            if slots[0] == b'':
                 slots.popleft()
 
             while len(slots) >= 5:
