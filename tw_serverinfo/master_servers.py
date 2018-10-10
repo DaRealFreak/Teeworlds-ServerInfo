@@ -31,7 +31,7 @@ class MasterServers(object):
     _game_servers = {}
 
     @property
-    def master_servers(self):
+    def master_servers(self) -> dict:
         """Generate generator of master servers with resolve IP address
 
         :return:
@@ -50,7 +50,7 @@ class MasterServers(object):
         return self._master_servers
 
     @property
-    def game_servers(self):
+    def game_servers(self) -> dict:
         """Returns the game servers and cache the result
 
         :return:

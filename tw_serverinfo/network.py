@@ -26,8 +26,9 @@ class Network(object):
     }
 
     @staticmethod
-    def send_packet(sock: socket.socket, data: bytes, server: dict):
+    def send_packet(sock: socket.socket, data: bytes, server: dict) -> dict:
         """Generate or reuse a request token  and send the passed data with the request token to the passed socket
+        Returns the updated server dict with additional token on game server types
 
         :type sock: socket.socket
         :type data: bytes
@@ -48,7 +49,7 @@ class Network(object):
         return server
 
     @staticmethod
-    def receive_packet(sock: socket.socket, servers: dict, callback: callable):
+    def receive_packet(sock: socket.socket, servers: dict, callback: callable) -> bool:
         """Check if we received a packet if yes check for the servers with the ip and port
         and pass the server together with the data to the processing function given as a callback
 
