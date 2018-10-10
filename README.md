@@ -1,4 +1,7 @@
 # Teeworlds Server Info
+[![Build Status](https://travis-ci.com/DaRealFreak/Teeworlds-ServerInfo.svg?branch=master)](https://travis-ci.com/DaRealFreak/Teeworlds-ServerInfo)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/DaRealFreak/Teeworlds-ServerInfo/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/DaRealFreak/Teeworlds-ServerInfo/?branch=master)
+
 small module to retrieve the registered servers from the master server and request the player information of each server.
 
 ### Installing
