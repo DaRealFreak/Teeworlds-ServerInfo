@@ -1,6 +1,9 @@
 import secrets
 import socket
 
+from tw_serverinfo.models import Server
+from tw_serverinfo.models.game_server import GameServer
+
 
 class Network(object):
     # www.teeworlds.com has no AAAA domain record and doesn't support IPv6 only requests
@@ -26,7 +29,7 @@ class Network(object):
     }
 
     @staticmethod
-    def send_packet(sock: socket.socket, data: bytes, server: dict) -> dict:
+    def send_packet(sock: socket.socket, data: bytes, server: Server) -> None:
         """Generate or reuse a request token  and send the passed data with the request token to the passed socket
         Returns the updated server dict with additional token on game server types
 
@@ -35,21 +38,20 @@ class Network(object):
         :type server: dict
         :return:
         """
-        if 'request_token' not in server:
-            server['request_token'] = secrets.token_bytes(nbytes=2)
+        if not server.request_token:
+            server.request_token = secrets.token_bytes(nbytes=2)
 
-        packet = b'xe%s\0\0%s' % (server['request_token'], data)
+        packet = b'xe%s\0\0%s' % (server.request_token, data)
 
-        if server['type'] == 'game':
-            if 'token' not in server:
-                server['token'] = secrets.token_bytes(nbytes=1)
-            packet += server['token']
+        if isinstance(server, GameServer):
+            if not server.token:
+                server.token = secrets.token_bytes(nbytes=1)
+            packet += server.token
 
-        sock.sendto(packet, (server['ip'], server['port']))
-        return server
+        sock.sendto(packet, (server.ip, server.port))
 
     @staticmethod
-    def receive_packet(sock: socket.socket, servers: dict, callback: callable) -> bool:
+    def receive_packet(sock: socket.socket, servers: list, callback: callable) -> bool:
         """Check if we received a packet if yes check for the servers with the ip and port
         and pass the server together with the data to the processing function given as a callback
 
@@ -63,8 +65,8 @@ class Network(object):
         except BlockingIOError:
             return False
 
-        for key, server in servers.items():
-            if server['ip'] == addr[0] and server['port'] == addr[1]:
+        for server in servers:  # type: Server
+            if server.ip == addr[0] and server.port == addr[1]:
                 callback(data, server)
 
         return True

@@ -5,9 +5,12 @@ from functools import lru_cache
 from time import sleep, time
 
 from tw_serverinfo import Network
+from tw_serverinfo.models.game_server import GameServer
+from tw_serverinfo.models.master_server import MasterServer
 
 
 class MasterServers(object):
+    """MasterServers Class containing the logic to request and parse responses from the master servers"""
     # ToDo: extract to json/yml file
     master_servers_cfg = [
         {
@@ -27,30 +30,24 @@ class MasterServers(object):
             'port': 8300
         }
     ]
-    _master_servers = {}
-    _game_servers = {}
+    _master_servers = []
 
-    @property
-    def master_servers(self) -> dict:
+    @lru_cache(maxsize=None)
+    def get_master_servers(self) -> list:
         """Generate generator of master servers with resolve IP address
 
         :return:
         """
-        self._master_servers = {}
+        self._master_servers = []
         for master_server in self.master_servers_cfg:
             ip = socket.gethostbyname(master_server['hostname'])
-            master_server_key = '{ip:s}:{port:d}'.format(ip=ip, port=master_server['port'])
-            self._master_servers[master_server_key] = {
-                'hostname': master_server['hostname'],
-                'ip': ip,
-                'port': master_server['port'],
-                'type': 'master',
-                'servers': {}
-            }
+            self._master_servers.append(
+                MasterServer(ip=ip, port=master_server['port'], hostname=master_server['hostname'])
+            )
         return self._master_servers
 
     @property
-    def game_servers(self) -> dict:
+    def master_servers(self) -> dict:
         """Returns the game servers and cache the result
 
         :return:
@@ -60,8 +57,6 @@ class MasterServers(object):
             # clear the cache if the last index was more than 10 minutes ago
             if time() >= self.update_master_server_info()['timestamp'] + 60 * 10:
                 self.update_master_server_info.cache_clear()
-                self._master_servers = {}
-                self._game_servers = {}
         return self.update_master_server_info()
 
     @lru_cache(maxsize=None)
@@ -75,19 +70,16 @@ class MasterServers(object):
         # set the socket to non blocking to allow parallel requests
         sock.setblocking(False)
 
-        for key, master_server in self.master_servers.items():
-            master_server = Network.send_packet(sock=sock, data=Network.PACKETS['SERVERBROWSE_GETCOUNT'],
-                                                server=master_server)
-            master_server = Network.send_packet(sock=sock, data=Network.PACKETS['SERVERBROWSE_GETLIST'],
-                                                server=master_server)
+        for master_server in self.get_master_servers():
+            Network.send_packet(sock=sock, data=Network.PACKETS['SERVERBROWSE_GETCOUNT'], server=master_server)
+            Network.send_packet(sock=sock, data=Network.PACKETS['SERVERBROWSE_GETLIST'], server=master_server)
             # update master server entry which probably got modified
-            self._master_servers[key] = master_server
 
         duration_without_response = Network.CONNECTION_SLEEP_DURATION
         sleep(Network.CONNECTION_SLEEP_DURATION / 1000.0)
 
         while True:
-            if not Network.receive_packet(sock, self.master_servers, self.process_packet):
+            if not Network.receive_packet(sock, self.get_master_servers(), self.process_packet):
                 if duration_without_response > Network.CONNECTION_TIMEOUT:
                     # we didn't receive any packets in time and cancel the connection here
                     sock.close()
@@ -101,11 +93,12 @@ class MasterServers(object):
                 duration_without_response = 0
 
         return {
-            'servers': self._game_servers,
+            'servers': self._master_servers,
             'timestamp': time()
         }
 
-    def process_packet(self, data: bytes, server: dict) -> None:
+    @staticmethod
+    def process_packet(data: bytes, server: MasterServer) -> None:
         """Process packet function for
          - SERVERBROWSE_COUNT
          - SERVERBROWSE_LIST
@@ -115,11 +108,10 @@ class MasterServers(object):
         :type server: dict
         :return:
         """
-        master_server_key = '{ip:s}:{port:d}'.format(ip=server['ip'], port=server['port'])
-        self._master_servers[master_server_key]['response'] = True
+        server.response = True
 
         if data[6:6 + 8] == Network.PACKETS['SERVERBROWSE_COUNT']:
-            self._master_servers[master_server_key]['num_servers'] = (data[14] << 8) | data[15]
+            server.num_servers = (data[14] << 8) | data[15]
         elif data[6:6 + 8] == Network.PACKETS['SERVERBROWSE_LIST']:
             for i in range(14, len(data) - 14, 18):
                 if data[i:i + 12] == b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff':
@@ -129,11 +121,5 @@ class MasterServers(object):
 
                 port = int.from_bytes(data[i + 16:i + 18], byteorder='big')
 
-                game_server_key = '{ip:s}:{port:d}'.format(ip=ip, port=port)
-                game_server = {
-                    'ip': ip,
-                    'port': port,
-                    'type': 'game'
-                }
-                self._master_servers[master_server_key]['servers'][game_server_key] = game_server
-                self._game_servers[game_server_key] = game_server
+                game_server = GameServer(ip=ip, port=port)
+                server.servers.append(game_server)
