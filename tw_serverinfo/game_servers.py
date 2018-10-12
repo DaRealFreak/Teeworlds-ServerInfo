@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+import logging
 import socket
 from collections import deque
 from time import sleep
@@ -65,6 +66,8 @@ class GameServers(object):
         token = int(slots.popleft().decode('utf-8'))
         # ToDo: token validation
 
+        server.response = True
+
         if data[6:6 + 8] == Network.PACKETS['SERVERBROWSE_INFO']:
             # vanilla
             self.parse_vanilla_response(slots, server)
@@ -75,7 +78,7 @@ class GameServers(object):
             # extended response, current default of DDNet
             self.parse_extended_response(slots, server)
         elif data[6:6 + 8] == Network.PACKETS['SERVERBROWSE_INFO_EXTENDED_MORE']:
-            print('no idea what to expect here, never got useful data')
+            logging.log(logging.DEBUG, 'no idea what to expect here, never got useful data')
 
     @staticmethod
     def parse_vanilla_response(slots: deque, server: GameServer) -> None:
