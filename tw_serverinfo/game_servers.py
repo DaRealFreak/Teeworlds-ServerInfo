@@ -31,26 +31,26 @@ class GameServers(object):
         i = 0
         for game_server in self._game_servers:  # type: GameServer
             i += 1
-            Network.send_packet(sock=sock, data=Network.PACKETS['SERVERBROWSE_GETINFO'], server=game_server)
-            Network.send_packet(sock=sock, data=Network.PACKETS['SERVERBROWSE_GETINFO_64_LEGACY'], server=game_server)
+            Network.send_packet(sock=sock, data=Network.PACKETS['SERVERBROWSE_GETINFO'], extra_data=b'xe',
+                                server=game_server)
+            Network.send_packet(sock=sock, data=Network.PACKETS['SERVERBROWSE_GETINFO_64_LEGACY'], extra_data=b'xe',
+                                server=game_server)
 
-            if i % self.SERVER_CHUNK_SIZE or i >= len(self._game_servers):
+            if i % self.SERVER_CHUNK_SIZE == 0 or i >= len(self._game_servers):
                 duration_without_response = Network.CONNECTION_SLEEP_DURATION
                 sleep(Network.CONNECTION_SLEEP_DURATION / 1000.0)
 
-                while True:
+                while duration_without_response < Network.CONNECTION_TIMEOUT:
                     if not Network.receive_packet(sock, self._game_servers, self.process_packet):
-                        if duration_without_response > Network.CONNECTION_TIMEOUT:
-                            # we didn't receive any packets in time and cancel the connection here
-                            sock.close()
-                            break
-                        else:
-                            # increase the measured duration without a response and sleep for the set duration
-                            duration_without_response += Network.CONNECTION_SLEEP_DURATION
-                            sleep(Network.CONNECTION_SLEEP_DURATION / 1000.0)
+                        # increase the measured duration without a response and sleep for the set duration
+                        duration_without_response += Network.CONNECTION_SLEEP_DURATION
+                        sleep(Network.CONNECTION_SLEEP_DURATION / 1000.0)
                     else:
                         # if we got a response reset the duration in case we receive multiple packets
                         duration_without_response = 0
+
+        # close the socket after checking all servers
+        sock.close()
 
     def process_packet(self, data: bytes, server: GameServer) -> None:
         """Process packet function for
