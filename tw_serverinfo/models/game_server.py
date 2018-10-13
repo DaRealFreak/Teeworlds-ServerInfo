@@ -6,7 +6,6 @@ from tw_serverinfo.models import Server
 class GameServer(Server):
     """GameServer Model containing properties for all possibly returned values"""
     _players = []
-    _token = b''
     _server_type = ''
     _version = ''
     _name = ''
@@ -50,14 +49,6 @@ class GameServer(Server):
     def append(self, player: dict) -> None:
         if player not in self._players:
             self._players.append(player)
-
-    @property
-    def token(self) -> bytes:
-        return self._token
-
-    @token.setter
-    def token(self, token: bytes) -> None:
-        self._token = token
 
     @property
     def server_type(self) -> str:

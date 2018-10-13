@@ -8,6 +8,7 @@ class Server(abc.ABC):
     _ip: str = ''
     _port: int = 8300
     _response: bool = False
+    _token = b''
     _request_token: bytes = b''
 
     @property
@@ -33,6 +34,14 @@ class Server(abc.ABC):
     @response.setter
     def response(self, response: bool) -> None:
         self._response = response
+
+    @property
+    def token(self) -> bytes:
+        return self._token
+
+    @token.setter
+    def token(self, token: bytes) -> None:
+        self._token = token
 
     @property
     def request_token(self) -> bytes:
