@@ -30,13 +30,13 @@ class TestMasterServers(unittest.TestCase):
         :return:
         """
         # assert that we actually got a dictionary
-        self.assertIsInstance(self.master_servers_module.master_servers, dict)
+        self.assertIsInstance(self.master_servers_module.master_servers, list)
         # check for the keys in the dictionary
         self.assertIn('timestamp', self.master_servers_module.master_servers)
         self.assertIn('servers', self.master_servers_module.master_servers)
         # check length
         self.assertEqual(len(self.master_servers_module.master_servers_cfg),
-                         len(self.master_servers_module.master_servers['servers']))
+                         len(self.master_servers_module.master_servers))
 
 
 if __name__ == '__main__':
