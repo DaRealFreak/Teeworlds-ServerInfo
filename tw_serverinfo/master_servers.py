@@ -3,6 +3,7 @@
 import socket
 from functools import lru_cache
 from time import sleep, time
+from typing import List
 
 from tw_serverinfo import Network
 from tw_serverinfo.models.game_server import GameServer
@@ -33,7 +34,7 @@ class MasterServers(object):
     _master_servers = []
 
     @lru_cache(maxsize=None)
-    def get_master_servers(self) -> list:
+    def get_master_servers(self) -> List[MasterServer]:
         """Generate generator of master servers with resolve IP address
 
         :return:
@@ -47,7 +48,7 @@ class MasterServers(object):
         return self._master_servers
 
     @property
-    def master_servers(self) -> list:
+    def master_servers(self) -> List[MasterServer]:
         """Returns the game servers and cache the result
 
         :return:
@@ -60,7 +61,7 @@ class MasterServers(object):
         return self.update_master_server_info()['servers']
 
     @property
-    def game_servers(self) -> list:
+    def game_servers(self) -> List[GameServer]:
         """Returns the game servers from the updated master server results
 
         :return:
@@ -143,7 +144,7 @@ class MasterServers(object):
         master_server.num_servers = (data[14] << 8) | data[15]
 
     @staticmethod
-    def parse_list_response(data:bytes, master_server: MasterServer) -> None:
+    def parse_list_response(data: bytes, master_server: MasterServer) -> None:
         """Parse the response on the SERVERBROWSE_GETLIST and SERVERBROWSE_GETINFO packet
 
         :type data: bytes

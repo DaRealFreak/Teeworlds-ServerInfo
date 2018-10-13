@@ -4,6 +4,7 @@ import logging
 import socket
 from collections import deque
 from time import sleep
+from typing import List
 
 from tw_serverinfo import Network
 from tw_serverinfo.models.game_server import GameServer
@@ -16,10 +17,11 @@ class GameServers(object):
 
     _game_servers = []
 
-    def fill_server_info(self, game_servers: list) -> None:
-        """
+    def fill_server_info(self, game_servers: List[GameServer]) -> None:
+        """Send the SERVERBROWSE_GETINFO and SERVERBROWSE_GETINFO_64_LEGACY packet to each game server in the
+        passed game_servers list, parse the response and update the GameServer objects in the game_servers argument
 
-        :param game_servers:
+        :type game_servers: list
         :return:
         """
         self._game_servers = game_servers
@@ -84,8 +86,8 @@ class GameServers(object):
     def parse_vanilla_response(slots: deque, server: GameServer) -> None:
         """Parse the default response of the vanilla client
 
-        :param slots:
-        :param server:
+        :type slots: deque
+        :type server: GameServer
         :return:
         """
         server.server_type = 'vanilla'
@@ -113,8 +115,8 @@ class GameServers(object):
     def parse_64_legacy_response(slots: deque, server: GameServer) -> None:
         """Parse the 64 slot legacy response
 
-        :param slots:
-        :param server:
+        :type slots: deque
+        :type server: GameServer
         :return:
         """
         server.server_type = '64_legacy'
@@ -145,8 +147,8 @@ class GameServers(object):
     def parse_extended_response(slots: deque, server: GameServer) -> None:
         """Parse the extended server info response(default for DDNet)
 
-        :param slots:
-        :param server:
+        :type slots: deque
+        :type server: GameServer
         :return:
         """
         server.server_type = 'ext'
