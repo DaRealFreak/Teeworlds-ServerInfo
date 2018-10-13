@@ -129,7 +129,7 @@ class MasterServers(object):
         master_server.response = True
 
         if data[6:6 + 8] == Network.PACKETS['SERVERBROWSE_COUNT']:
-            MasterServers.parse_list_response(data, master_server)
+            MasterServers.parse_count_response(data, master_server)
         elif data[6:6 + 8] == Network.PACKETS['SERVERBROWSE_LIST']:
             MasterServers.parse_list_response(data, master_server)
 
