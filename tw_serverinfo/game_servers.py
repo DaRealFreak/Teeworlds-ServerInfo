@@ -74,20 +74,16 @@ class GameServers(object):
             return
 
         if data[6:6 + 8] == Network.PACKETS['SERVERBROWSE_INFO']:
-            # vanilla
+            # vanilla (inf3) packet
             self.parse_vanilla_response(slots, server)
         elif data[6:6 + 8] == Network.PACKETS['SERVERBROWSE_INFO_64_LEGACY']:
-            # 64 legacy
+            # 64 legacy (dtsf) packet
             self.parse_64_legacy_response(slots, server)
         elif data[6:6 + 8] == Network.PACKETS['SERVERBROWSE_INFO_EXTENDED']:
-            if (token & 0xffff00) >> 8 != (server.request_token[0] << 8) + server.request_token[1]:
-                # additional server token validation failed
-                logging.log(logging.INFO, 'request token validation failed for GameServer response. GameServer: '
-                            + str(server))
-                return
-            # extended response, current default of DDNet
-            self.parse_extended_response(slots, server)
+            # extended response (iext) packet, current default of DDNet
+            self.parse_extended_response(slots, server, token)
         elif data[6:6 + 8] == Network.PACKETS['SERVERBROWSE_INFO_EXTENDED_MORE']:
+            # extended response (iex+) packet
             self.parse_extended_more_response(slots, server)
 
     @staticmethod
@@ -152,13 +148,20 @@ class GameServers(object):
             })
 
     @staticmethod
-    def parse_extended_response(slots: deque, server: GameServer) -> None:
+    def parse_extended_response(slots: deque, server: GameServer, token: int) -> None:
         """Parse the extended server info response(default for DDNet)
 
         :type slots: deque
         :type server: GameServer
+        :type token: int
         :return:
         """
+        if (token & 0xffff00) >> 8 != (server.request_token[0] << 8) + server.request_token[1]:
+            # additional server token validation failed
+            logging.log(logging.INFO, 'request token validation failed for GameServer response. GameServer: '
+                        + str(server))
+            return
+
         server.server_type = 'ext'
         server.version = slots.popleft().decode('utf-8')
         server.name = slots.popleft().decode('utf-8')
