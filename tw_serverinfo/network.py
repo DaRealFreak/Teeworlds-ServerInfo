@@ -2,7 +2,6 @@ import secrets
 import socket
 
 from tw_serverinfo.models import Server
-from tw_serverinfo.models.game_server import GameServer
 
 
 class Network(object):
@@ -29,21 +28,23 @@ class Network(object):
     }
 
     @staticmethod
-    def send_packet(sock: socket.socket, data: bytes, server: Server) -> None:
+    def send_packet(sock: socket.socket, data: bytes, extra_data: bytes, server: Server, add_token=True) -> None:
         """Generate or reuse a request token  and send the passed data with the request token to the passed socket
         Returns the updated server dict with additional token on game server types
 
         :type sock: socket.socket
         :type data: bytes
+        :type extra_data: bytes
         :type server: dict
+        :type add_token: bool
         :return:
         """
         if not server.request_token:
             server.request_token = secrets.token_bytes(nbytes=2)
 
-        packet = b'xe%s\0\0%s' % (server.request_token, data)
+        packet = b'%s%s\0\0%s' % (extra_data, server.request_token, data)
 
-        if isinstance(server, GameServer):
+        if add_token:
             if not server.token:
                 server.token = secrets.token_bytes(nbytes=1)
             packet += server.token
