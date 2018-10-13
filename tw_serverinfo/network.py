@@ -1,3 +1,4 @@
+import logging
 import secrets
 import socket
 
@@ -41,14 +42,18 @@ class Network(object):
         """
         if not server.request_token:
             server.request_token = secrets.token_bytes(nbytes=2)
+            logging.log(logging.DEBUG, 'generated server request token: {token!r}'.format(token=server.request_token))
 
         packet = b'%s%s\0\0%s' % (extra_data, server.request_token, data)
 
         if add_token:
             if not server.token:
                 server.token = secrets.token_bytes(nbytes=1)
+                logging.log(logging.DEBUG, 'generated server token: {token!r}'.format(token=server.token))
             packet += server.token
 
+        logging.log(logging.DEBUG, 'sending packet ({packet!r}) to {ip:s}:{port:d}'.format(packet=packet, ip=server.ip,
+                                                                                           port=server.port))
         sock.sendto(packet, (server.ip, server.port))
 
     @staticmethod
@@ -66,6 +71,8 @@ class Network(object):
         except BlockingIOError:
             return False
 
+        logging.log(logging.DEBUG, 'received data ({data!r}) from {ip:s}:{port:d}'.format(data=data, ip=addr[0],
+                                                                                          port=addr[1]))
         for server in servers:  # type: Server
             if server.ip == addr[0] and server.port == addr[1]:
                 callback(data, server)
