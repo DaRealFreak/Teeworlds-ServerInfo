@@ -128,16 +128,36 @@ class MasterServers(object):
         master_server.response = True
 
         if data[6:6 + 8] == Network.PACKETS['SERVERBROWSE_COUNT']:
-            master_server.num_servers = (data[14] << 8) | data[15]
+            MasterServers.parse_list_response(data, master_server)
         elif data[6:6 + 8] == Network.PACKETS['SERVERBROWSE_LIST']:
-            for i in range(14, len(data) - 14, 18):
-                if data[i:i + 12] == b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff':
-                    ip = socket.inet_ntop(socket.AF_INET, data[i + 12:i + 16])
-                else:
-                    ip = '[' + socket.inet_ntop(socket.AF_INET6, data[i:i + 16]) + ']'
+            MasterServers.parse_list_response(data, master_server)
 
-                port = int.from_bytes(data[i + 16:i + 18], byteorder='big')
+    @staticmethod
+    def parse_count_response(data: bytes, master_server: MasterServer) -> None:
+        """Parse the response on the SERVERBROWSE_COUNT packet
 
-                if ip != master_server.ip or port != master_server.port:
-                    game_server = GameServer(ip=ip, port=port)
-                    master_server.servers.append(game_server)
+        :type data: bytes
+        :type master_server: MasterServer
+        :return:
+        """
+        master_server.num_servers = (data[14] << 8) | data[15]
+
+    @staticmethod
+    def parse_list_response(data:bytes, master_server: MasterServer) -> None:
+        """Parse the response on the SERVERBROWSE_GETLIST and SERVERBROWSE_GETINFO packet
+
+        :type data: bytes
+        :type master_server: MasterServer
+        :return:
+        """
+        for i in range(14, len(data) - 14, 18):
+            if data[i:i + 12] == b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff':
+                ip = socket.inet_ntop(socket.AF_INET, data[i + 12:i + 16])
+            else:
+                ip = '[' + socket.inet_ntop(socket.AF_INET6, data[i:i + 16]) + ']'
+
+            port = int.from_bytes(data[i + 16:i + 18], byteorder='big')
+
+            if ip != master_server.ip or port != master_server.port:
+                game_server = GameServer(ip=ip, port=port)
+                master_server.servers.append(game_server)
