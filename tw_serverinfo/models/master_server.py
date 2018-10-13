@@ -1,6 +1,9 @@
 #!/usr/local/bin/python
 # coding: utf-8
+from typing import List
+
 from tw_serverinfo.models import Server
+from tw_serverinfo.models.game_server import GameServer
 
 
 class MasterServer(Server):
@@ -27,14 +30,14 @@ class MasterServer(Server):
                     num_servers=self._num_servers, request_token=self._request_token)
 
     @property
-    def servers(self) -> list:
+    def servers(self) -> List[GameServer]:
         return self._servers
 
     @servers.setter
-    def servers(self, servers: list) -> None:
+    def servers(self, servers: List[GameServer]) -> None:
         self._servers = servers
 
-    def append(self, server: dict) -> None:
+    def append_server(self, server: GameServer) -> None:
         if server not in self._servers:
             self._servers.append(server)
 

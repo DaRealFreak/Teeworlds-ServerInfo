@@ -161,4 +161,4 @@ class MasterServers(object):
 
             if ip != master_server.ip or port != master_server.port:
                 game_server = GameServer(ip=ip, port=port)
-                master_server.servers.append(game_server)
+                master_server.append_server(game_server)

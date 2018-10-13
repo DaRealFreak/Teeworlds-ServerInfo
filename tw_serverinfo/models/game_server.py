@@ -1,5 +1,7 @@
 #!/usr/local/bin/python
 # coding: utf-8
+from typing import List
+
 from tw_serverinfo.models import Server
 
 
@@ -39,14 +41,14 @@ class GameServer(Server):
                     max_clients=self._max_clients, token=self._token)
 
     @property
-    def players(self) -> list:
+    def players(self) -> List[dict]:
         return self._players
 
     @players.setter
-    def players(self, player: list) -> None:
+    def players(self, player: List[dict]) -> None:
         self._players = player
 
-    def append(self, player: dict) -> None:
+    def append_player(self, player: dict) -> None:
         if player not in self._players:
             self._players.append(player)
 
