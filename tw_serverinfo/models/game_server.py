@@ -28,8 +28,8 @@ class GameServer(Server):
         :type ip: str
         :type port: int
         """
-        self._ip = ip
-        self._port = port
+        self.ip = ip
+        self.port = port
 
     def __repr__(self) -> str:
         """Reprint function, displays game server details instead of instance information
@@ -40,10 +40,10 @@ class GameServer(Server):
                'name={name:s}, map_name={map_name:s}, game_type={game_type:s}, flags={flags:d}, ' \
                'players=({num_players:d}/{max_players:d}), clients=({num_clients:d}/{max_clients:d}), ' \
                'token={token!r}' \
-            .format(ip=self._ip, port=self._port, response=self._response,
-                    name=self._name, map_name=self._map_name, game_type=self._game_type, flags=self._flags,
-                    num_players=self._num_players, max_players=self._max_players, num_clients=self._num_clients,
-                    max_clients=self._max_clients, token=self._token)
+            .format(ip=self.ip, port=self.port, response=self.response,
+                    name=self.name, map_name=self.map_name, game_type=self.game_type, flags=self.flags,
+                    num_players=self.num_players, max_players=self.max_players, num_clients=self.num_clients,
+                    max_clients=self.max_clients, token=self.token)
 
     @property
     def players(self) -> List[Player]:
