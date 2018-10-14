@@ -41,7 +41,11 @@ class TestMasterServers(unittest.TestCase):
         """
         g1 = MasterServer(ip='127.0.0.1', port=8300)
         g2 = MasterServer(ip='127.0.0.1', port=8300, hostname='master.localhost')
+        g3 = MasterServer(ip='127.0.0.2', port=8300, hostname='master.localhost')
+        g4 = MasterServer(ip='127.0.0.1', port=8303)
         self.assertEqual(g1, g2)
+        self.assertNotEqual(g1, g3)
+        self.assertNotEqual(g1, g4)
 
     def test_master_servers_property(self):
         """Test the function to retrieve and parse data from the master server
