@@ -50,7 +50,12 @@ class TestGameServers(unittest.TestCase):
         g1 = GameServer(ip='127.0.0.1', port=8300)
         g2 = GameServer(ip='127.0.0.1', port=8300)
         g2.response = True
+        g3 = GameServer(ip='127.0.0.2', port=8300)
+        g4 = GameServer(ip='127.0.0.1', port=8301)
         self.assertEqual(g1, g2)
+        self.assertNotEqual(g1, g3)
+        self.assertNotEqual(g2, g3)
+        self.assertNotEqual(g3, g4)
 
 
 if __name__ == '__main__':
