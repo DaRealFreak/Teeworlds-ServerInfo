@@ -33,6 +33,25 @@ class TestGameServers(unittest.TestCase):
                 self.assertTrue(game_server.game_type != '')
                 self.assertTrue(game_server.map_name != '')
 
+    def test_repr(self):
+        """Test if all attributes in the repr function can get called properly
+
+        :return:
+        """
+        for game_server in self.game_servers:
+            self.assertIsInstance(game_server.__repr__(), str)
+
+    def test_eq(self):
+        """Check if equality check works. GameServer objects with the same ip and same port should
+        return True even if another attribute is set
+
+        :return:
+        """
+        g1 = GameServer(ip='127.0.0.1', port=8300)
+        g2 = GameServer(ip='127.0.0.1', port=8300)
+        g2.response = True
+        self.assertEqual(g1, g2)
+
 
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestGameServers)
