@@ -19,6 +19,7 @@ setup(name=about['__title__'],
       license=about['__license__'],
       packages=find_packages(),
       install_requires=[
+          'pycountry>=18.5.26'
       ],
       extras_require={
       },
