@@ -79,8 +79,10 @@ class Player(object):
         else:
             zfilled_country = country.zfill(3)
             # only allow to set indexes which are known
-            if countries.lookup(zfilled_country):
-                self._country_index = countries.lookup(zfilled_country).numeric
+            try:
+                self._country_index = countries.get(numeric=zfilled_country).numeric
+            except KeyError:
+                pass
 
     @property
     def country_code(self) -> str:
