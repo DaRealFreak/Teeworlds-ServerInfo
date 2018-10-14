@@ -11,6 +11,14 @@ class Server(abc.ABC):
     _token = b''
     _request_token: bytes = b''
 
+    def __eq__(self, other) -> bool:
+        """Check for equality of objects
+
+        :type other: Server
+        :return:
+        """
+        return self.ip == other.ip and self.port == other.port
+
     @property
     def ip(self) -> str:
         return self._ip
