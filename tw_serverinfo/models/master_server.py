@@ -19,9 +19,9 @@ class MasterServer(Server):
         :type port: int
         :type hostname: str
         """
-        self._ip = ip
-        self._port = port
-        self._hostname = hostname
+        self.ip = ip
+        self.port = port
+        self.hostname = hostname
 
     def __repr__(self) -> str:
         """Reprint function, displays master server details instead of instance information
@@ -30,8 +30,8 @@ class MasterServer(Server):
         """
         return 'MasterServer(ip={ip:s}, port={port:d}, hostname={hostname:s}, ' \
                'response={response!r}, num_servers={num_servers:d}, request_token={request_token!r}' \
-            .format(ip=self._ip, port=self._port, hostname=self._hostname, response=self._response,
-                    num_servers=self._num_servers, request_token=self._request_token)
+            .format(ip=self.ip, port=self.port, hostname=self.hostname, response=self.response,
+                    num_servers=self.num_servers, request_token=self.request_token)
 
     @property
     def servers(self) -> List[GameServer]:
@@ -52,3 +52,11 @@ class MasterServer(Server):
     @num_servers.setter
     def num_servers(self, number: int) -> None:
         self._num_servers = number
+
+    @property
+    def hostname(self) -> str:
+        return self._hostname
+
+    @hostname.setter
+    def hostname(self, hostname: str) -> None:
+        self._hostname = hostname
