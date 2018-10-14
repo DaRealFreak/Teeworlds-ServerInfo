@@ -37,13 +37,13 @@ class GameServer(Server):
         :return:
         """
         return 'GameServer(ip={ip:s}, port={port:d}, response={response!r}, ' \
-               'name={name:s}, map_name={map_name:s}, game_type={game_type:s}, flags={flags:d}, ' \
+               'name={name:s}, version={version:s}, map_name={map_name:s}, game_type={game_type:s}, flags={flags:d}, ' \
                'players=({num_players:d}/{max_players:d}), clients=({num_clients:d}/{max_clients:d}), ' \
                'token={token!r}' \
             .format(ip=self.ip, port=self.port, response=self.response,
-                    name=self.name, map_name=self.map_name, game_type=self.game_type, flags=self.flags,
-                    num_players=self.num_players, max_players=self.max_players, num_clients=self.num_clients,
-                    max_clients=self.max_clients, token=self.token)
+                    name=self.name, version=self.version, map_name=self.map_name, game_type=self.game_type,
+                    flags=self.flags, num_players=self.num_players, max_players=self.max_players,
+                    num_clients=self.num_clients, max_clients=self.max_clients, token=self.token)
 
     @property
     def players(self) -> List[Player]:
@@ -72,6 +72,14 @@ class GameServer(Server):
     @name.setter
     def name(self, name: str) -> None:
         self._name = name
+
+    @property
+    def version(self) -> str:
+        return self._version
+
+    @version.setter
+    def version(self, version: str) -> None:
+        self._version = version
 
     @property
     def map_name(self) -> str:
