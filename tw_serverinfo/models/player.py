@@ -33,7 +33,7 @@ class Player(object):
 
         :return:
         """
-        return 'Player(name={name:s}, clan={clan:s}, country={country:s}, country_index={country_index:d}' \
+        return 'Player(name={name:s}, clan={clan:s}, country={country:s}, country_index={country_index:d}, ' \
                'score={score:d}, ingame={ingame!r})'.format(name=self.name, clan=self.clan, country=self.country,
                                                             country_index=self.country_index, score=self.score,
                                                             ingame=self.ingame)
