@@ -76,5 +76,5 @@ class Network(object):
         for server in servers:  # type: Server
             if server.ip == addr[0] and server.port == addr[1]:
                 callback(data, server)
-
-        return True
+                return True
+        return False
