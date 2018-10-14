@@ -26,12 +26,15 @@ class TestGameServers(unittest.TestCase):
         self.game_servers_module.fill_server_info(self.game_servers)
         for game_server in self.game_servers:  # type: GameServer
             if game_server.response:
+                self.assertTrue(game_server.server_type != '')
                 self.assertTrue(game_server.name != '')
                 self.assertTrue(game_server.max_players > 0)
                 self.assertTrue(game_server.max_clients > 0)
                 self.assertTrue(game_server.token != b'')
                 self.assertTrue(game_server.game_type != '')
                 self.assertTrue(game_server.map_name != '')
+                self.assertIsInstance(game_server.map_crc, int)
+                self.assertIsInstance(game_server.map_size, int)
 
     def test_repr(self):
         """Test if all attributes in the repr function can get called properly
