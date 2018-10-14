@@ -11,10 +11,16 @@ This script runs with [Python 3](https://www.python.org).
 Download this repository and run the setup.py to install all necessary dependencies
 
 ### Dependencies
-None
+Required:
+ * [pycountry](https://pypi.org/project/pycountry/) - Extension to retrieve country codes/names based on the numeric identifier
 
 ### Usage
-ToDo
+An example usage to retrieve the master servers, game servers and server information is in the file
+[usage.py](usage.py)
+
+## Running the tests
+In the tests folder you can run each unittest individually.
+The test cases should be self-explanatory.
 
 ## Development
 Want to contribute? Great!
