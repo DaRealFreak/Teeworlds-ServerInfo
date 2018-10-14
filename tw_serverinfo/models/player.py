@@ -24,10 +24,7 @@ class Player(object):
         """
         self.name = name
         self.clan = clan
-        if country == -1:
-            self._country_index = str(country)
-        else:
-            self.country = str(country)
+        self.country = str(country)
         self.score = score
         self.ingame = ingame
 
