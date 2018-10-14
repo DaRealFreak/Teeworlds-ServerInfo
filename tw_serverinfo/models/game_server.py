@@ -30,6 +30,7 @@ class GameServer(Server):
         """
         self.ip = ip
         self.port = port
+        self.players = []
 
     def __repr__(self) -> str:
         """Reprint function, displays game server details instead of instance information

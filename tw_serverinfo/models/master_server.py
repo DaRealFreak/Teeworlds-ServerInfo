@@ -22,6 +22,7 @@ class MasterServer(Server):
         self.ip = ip
         self.port = port
         self.hostname = hostname
+        self.servers = []
 
     def __repr__(self) -> str:
         """Reprint function, displays master server details instead of instance information
