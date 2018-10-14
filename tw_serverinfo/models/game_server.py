@@ -3,6 +3,7 @@
 from typing import List
 
 from tw_serverinfo.models import Server
+from tw_serverinfo.models.player import Player
 
 
 class GameServer(Server):
@@ -31,6 +32,10 @@ class GameServer(Server):
         self._port = port
 
     def __repr__(self) -> str:
+        """Reprint function, displays game server details instead of instance information
+
+        :return:
+        """
         return 'GameServer(ip={ip:s}, port={port:d}, response={response!r}, ' \
                'name={name:s}, map_name={map_name:s}, game_type={game_type:s}, flags={flags:d}, ' \
                'players=({num_players:d}/{max_players:d}), clients=({num_clients:d}/{max_clients:d}), ' \
@@ -41,14 +46,14 @@ class GameServer(Server):
                     max_clients=self._max_clients, token=self._token)
 
     @property
-    def players(self) -> List[dict]:
+    def players(self) -> List[Player]:
         return self._players
 
     @players.setter
-    def players(self, player: List[dict]) -> None:
+    def players(self, player: List[Player]) -> None:
         self._players = player
 
-    def append_player(self, player: dict) -> None:
+    def append_player(self, player: Player) -> None:
         if player not in self._players:
             self._players.append(player)
 

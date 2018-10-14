@@ -8,6 +8,7 @@ from typing import List
 
 from tw_serverinfo import Network
 from tw_serverinfo.models.game_server import GameServer
+from tw_serverinfo.models.player import Player
 
 
 class GameServers(object):
@@ -106,14 +107,13 @@ class GameServers(object):
         server.max_clients = int(slots.popleft().decode('utf-8'))
 
         while len(slots) >= 5:
-            # no idea what this is, always empty
-            server.append_player({
-                'name': slots.popleft(),
-                'clan': slots.popleft(),
-                'country': int(slots.popleft().decode('utf-8')),
-                'score': int(slots.popleft().decode('utf-8')),
-                'ingame': int(slots.popleft().decode('utf-8'))
-            })
+            server.append_player(Player(
+                name=slots.popleft().decode('utf-8'),
+                clan=slots.popleft().decode('utf-8'),
+                country=int(slots.popleft().decode('utf-8')),
+                score=int(slots.popleft().decode('utf-8')),
+                ingame=bool(int(slots.popleft().decode('utf-8')))
+            ))
 
     @staticmethod
     def parse_64_legacy_response(slots: deque, server: GameServer) -> None:
@@ -139,13 +139,13 @@ class GameServers(object):
             slots.popleft()
 
         while len(slots) >= 5:
-            server.append_player({
-                'name': slots.popleft(),
-                'clan': slots.popleft(),
-                'country': int(slots.popleft().decode('utf-8')),
-                'score': int(slots.popleft().decode('utf-8')),
-                'ingame': int(slots.popleft().decode('utf-8'))
-            })
+            server.append_player(Player(
+                name=slots.popleft().decode('utf-8'),
+                clan=slots.popleft().decode('utf-8'),
+                country=int(slots.popleft().decode('utf-8')),
+                score=int(slots.popleft().decode('utf-8')),
+                ingame=bool(int(slots.popleft().decode('utf-8')))
+            ))
 
     @staticmethod
     def parse_extended_response(slots: deque, server: GameServer, token: int) -> None:
@@ -178,13 +178,13 @@ class GameServers(object):
         while len(slots) >= 6:
             # no idea what this is, always empty
             slots.popleft()
-            server.append_player({
-                'name': slots.popleft(),
-                'clan': slots.popleft(),
-                'country': int(slots.popleft().decode('utf-8')),
-                'score': int(slots.popleft().decode('utf-8')),
-                'ingame': int(slots.popleft().decode('utf-8'))
-            })
+            server.append_player(Player(
+                name=slots.popleft().decode('utf-8'),
+                clan=slots.popleft().decode('utf-8'),
+                country=int(slots.popleft().decode('utf-8')),
+                score=int(slots.popleft().decode('utf-8')),
+                ingame=bool(int(slots.popleft().decode('utf-8')))
+            ))
 
     @staticmethod
     def parse_extended_more_response(slots: deque, server: GameServer) -> None:
@@ -200,10 +200,10 @@ class GameServers(object):
         while len(slots) >= 6:
             # no idea what this is, always empty
             slots.popleft()
-            server.append_player({
-                'name': slots.popleft(),
-                'clan': slots.popleft(),
-                'country': int(slots.popleft().decode('utf-8')),
-                'score': int(slots.popleft().decode('utf-8')),
-                'ingame': int(slots.popleft().decode('utf-8'))
-            })
+            server.append_player(Player(
+                name=slots.popleft().decode('utf-8'),
+                clan=slots.popleft().decode('utf-8'),
+                country=int(slots.popleft().decode('utf-8')),
+                score=int(slots.popleft().decode('utf-8')),
+                ingame=bool(int(slots.popleft().decode('utf-8')))
+            ))

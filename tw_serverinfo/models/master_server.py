@@ -24,6 +24,10 @@ class MasterServer(Server):
         self._hostname = hostname
 
     def __repr__(self) -> str:
+        """Reprint function, displays master server details instead of instance information
+
+        :return:
+        """
         return 'MasterServer(ip={ip:s}, port={port:d}, hostname={hostname:s}, ' \
                'response={response!r}, num_servers={num_servers:d}, request_token={request_token!r}' \
             .format(ip=self._ip, port=self._port, hostname=self._hostname, response=self._response,
@@ -37,9 +41,9 @@ class MasterServer(Server):
     def servers(self, servers: List[GameServer]) -> None:
         self._servers = servers
 
-    def append_server(self, server: GameServer) -> None:
-        if server not in self._servers:
-            self._servers.append(server)
+    def append_server(self, game_server: GameServer) -> None:
+        if game_server not in self._servers:
+            self._servers.append(game_server)
 
     @property
     def num_servers(self) -> int:
