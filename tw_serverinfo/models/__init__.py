@@ -4,7 +4,7 @@ import abc
 
 
 class Server(abc.ABC):
-    """Server Model Template, containing properties for same attributes of MasterServer and GameServer obejcts"""
+    """Server Model Template, containing properties for same attributes of MasterServer and GameServer objects"""
     _ip: str = ''
     _port: int = 8300
     _response: bool = False
