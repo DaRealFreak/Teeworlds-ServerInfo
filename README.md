@@ -1,8 +1,8 @@
 # Teeworlds Server Info
-[![Build Status](https://travis-ci.com/DaRealFreak/Teeworlds-ServerInfo.svg?branch=master)](https://travis-ci.com/DaRealFreak/Teeworlds-ServerInfo)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/DaRealFreak/Teeworlds-ServerInfo/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/DaRealFreak/Teeworlds-ServerInfo/?branch=master)
-[![Coverage Status](https://coveralls.io/repos/github/DaRealFreak/Teeworlds-ServerInfo/badge.svg?branch=master)](https://coveralls.io/github/DaRealFreak/Teeworlds-ServerInfo?branch=master)
-
+[![Build Status](https://img.shields.io/travis/com/DaRealFreak/Teeworlds-ServerInfo.svg?style=flat-square)](https://travis-ci.com/DaRealFreak/Teeworlds-ServerInfo)
+[![Scrutinizer](https://img.shields.io/scrutinizer/g/DaRealFreak/Teeworlds-ServerInfo.svg?style=flat-square)](https://scrutinizer-ci.com/g/DaRealFreak/Teeworlds-ServerInfo/?branch=master)
+[![Coveralls github](https://img.shields.io/coveralls/github/DaRealFreak/Teeworlds-ServerInfo.svg?style=flat-square)](https://coveralls.io/github/DaRealFreak/Teeworlds-ServerInfo?branch=master)
+[![GitHub license](https://img.shields.io/github/license/DaRealFreak/Teeworlds-ServerInfo.svg?style=flat-square)](https://github.com/DaRealFreak/Teeworlds-ServerInfo/blob/master/LICENSE.md)  
 small module to retrieve the registered servers from the master server and request the player information of each server.
 
 ### Installing
