@@ -1,6 +1,5 @@
 #!/usr/local/bin/python
 # coding: utf-8
-import unicodedata
 
 from pycountry import countries
 
@@ -54,7 +53,7 @@ class Player(object):
 
     @name.setter
     def name(self, name: str) -> None:
-        self._name = self.remove_control_characters(name)
+        self._name = name
 
     @property
     def clan(self) -> str:
@@ -62,7 +61,7 @@ class Player(object):
 
     @clan.setter
     def clan(self, clan: str) -> None:
-        self._clan = self.remove_control_characters(clan)
+        self._clan = clan
 
     @property
     def country(self) -> str:
@@ -109,12 +108,3 @@ class Player(object):
     @ingame.setter
     def ingame(self, ingame: bool) -> None:
         self._ingame = ingame
-
-    @staticmethod
-    def remove_control_characters(string) -> str:
-        """Remove control characters which should not be in the string but appear sometimes in player strings
-
-        :type string: str
-        :return:
-        """
-        return "".join(ch for ch in string if unicodedata.category(ch)[0] != "C")
