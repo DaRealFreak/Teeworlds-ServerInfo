@@ -134,9 +134,12 @@ class GameServers(object):
         server.num_clients = int(slots.popleft().decode('utf-8'))
         server.max_clients = int(slots.popleft().decode('utf-8'))
 
+        # contains sometimes control bytes or \x00 bytes, not sure what it is
+        # since we split at \x00 bytes remove if it is currently \x00 else, split it from the next element
         if slots[0] == b'':
-            # no idea what this is, always empty
             slots.popleft()
+        else:
+            slots.appendleft(slots.popleft()[1:])
 
         while len(slots) >= 5:
             server.append_player(Player(
